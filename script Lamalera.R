@@ -32,7 +32,7 @@ accom<-tourism.terms$Value[2,7,8,9,11,12,13,15]
 #get our basic large scale map
 
 indonesia_bbox <- c(lon1 = 90, lon2 = 145, lat1 = -15, lat2 = 10)
-
+lembata_bbox<-c(lon1 =123, lon2=124, lat1=-9,  lat2=-8)
 
 
 hires_coast <- ne_download(scale = "large", type = "coastline", category = "physical", returnclass="sf")
@@ -64,6 +64,37 @@ indo_plot<-ggplot() +
   theme_minimal()
 
 ggsave("indonesia.png",plot=indo_plot,device="png",height=10,width=20,units="cm",dpi=200,bg="white")
+
+
+bathy_lembata <- getNOAA.bathy(
+  lon1 = lembata_bbox["lon1"],
+  lon2 = lembata_bbox["lon2"],
+  lat1 = lembata_bbox["lat1"],
+  lat2 = lembata_bbox["lat2"],
+  resolution = 2 
+)
+
+bathy_lembata_df <- marmap::fortify.bathy(bathy_lembata) #so it integrates with ggplot options
+
+
+
+lembata_plot<-ggplot() +
+  geom_raster(data = bathy_lembata_df, aes(x = x, y = y, fill = z)) +
+  scale_fill_gradient2(
+    name = "Depth (m)",
+    low = "#2166ac", mid = "#f7f7f7", high = "#b2182b",
+    midpoint = 0
+  ) +
+#  geom_contour(data = bathy_lembata_df, aes(x, y, z = z), breaks = c(-30,-50,-100), color = "blue") +
+  geom_sf(data = indonesia_hires, fill = "grey60", color = "black", linewidth = 0.2) +
+  coord_sf(xlim = c(123, 124), ylim = c(-9, -8), expand = FALSE) +
+  labs(title = "Lembata Island",x="longitude",y="latitude") +
+  theme_minimal()
+
+lembata_plot
+
+ggsave("lembata.png",plot=lembata_plot,device="png",height=10,width=15,units="cm",dpi=200,bg="white")
+
 
 
 
