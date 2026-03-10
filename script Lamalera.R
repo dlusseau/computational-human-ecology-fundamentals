@@ -125,6 +125,9 @@ geometries<-c("osm_polygons","osm_multipolygons","osm_points","osm_lines","osm_m
 ###########################################################################
 #### OSM
 
+### an interesting paper: https://dl.acm.org/doi/10.1145/3706598.3713695
+
+
 for (i in 1:nrow(indo3)) {
   query_poly<-st_make_valid(indo3$geometry[i])
   
@@ -156,6 +159,15 @@ for (i in 1:nrow(indo3)) {
 #### wikipedia
 
 
+#####Lembata
+lembata_wiki<-"Lembata"
+lamarela_wiki<-"Lamalera_people"
+
+lembata_wikitrends<-wp_trend(lembata_wiki,from = "2016-01-01",to = "2026-03-09", lang="en")
+lamarela_wikitrends<-wp_trend(lamarela_wiki,from = "2016-01-01",to = "2026-03-09", lang="en")
+  
+
+### cycle through the osm attractions
 
 attraction_wiki.df<-data.frame(wiki_url=rep(NA,nattraction),dist=NA,attractiveness=NA,trend=NA,trendSE=NA)
 
